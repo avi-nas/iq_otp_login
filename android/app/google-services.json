@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "94083753611",
+    "project_id": "iq-otp-login",
+    "storage_bucket": "iq-otp-login.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:94083753611:android:43e1f7f73fb5304c9c168e",
+        "android_client_info": {
+          "package_name": "com.example.iq_otp_login"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "94083753611-cka057c98fc9drbf55cmr93tpdqd67qd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.iq_otp_login",
+            "certificate_hash": "0c03115b4cd73bc9c7c3c84c66f3dcf9d9a7ea2e"
+          }
+        },
+        {
+          "client_id": "94083753611-jlhfk96hbt0hqpbvrl6ef7ljsn7h7vae.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDSOrNLTOOrCWEO-SnHZ6HgoZw75GKuSwU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "94083753611-jlhfk96hbt0hqpbvrl6ef7ljsn7h7vae.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
