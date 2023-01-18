@@ -1,8 +1,9 @@
+import 'package:flutter/foundation.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:iq_otp_login/screens/home_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:pin_code_fields/pin_code_fields.dart';
 
 
 import '../reusablec_widgets/reusable_widget.dart';
@@ -15,9 +16,9 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-  TextEditingController _numberTextController = TextEditingController();
-  TextEditingController _passwordTextController = TextEditingController();
-  TextEditingController _otpTextController = TextEditingController();
+  final TextEditingController _numberTextController = TextEditingController();
+  final TextEditingController _passwordTextController = TextEditingController();
+  final TextEditingController _otpTextController = TextEditingController();
   late String _verificationCode;
   late String _verificationId;
   @override
@@ -44,14 +45,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
     )),
         child: SingleChildScrollView(
           child: Padding(
-            padding: EdgeInsets.fromLTRB(20, 120, 20, 0),
+            padding: const EdgeInsets.fromLTRB(20, 120, 20, 0),
             child: Column(
               children: <Widget>[
-                SizedBox(
+                const SizedBox(
                   height: 30,
                 ),
                 resuableTextField("Phone Number",Icons.verified_user,false,_numberTextController),
-                SizedBox(
+                const SizedBox(
                   height: 30,
                 ),
 
@@ -61,7 +62,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       toastLength: Toast.LENGTH_LONG,
                   );
                   await FirebaseAuth.instance.verifyPhoneNumber(
-                    phoneNumber: _numberTextController.text.trim() ,
+                    phoneNumber: "+91${_numberTextController.text.trim()}" ,
                     verificationCompleted: (PhoneAuthCredential credential) {},
                     verificationFailed: (FirebaseAuthException e) {},
                     codeSent: (String verificationId, int? resendToken) {
@@ -70,17 +71,67 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                     },
                     codeAutoRetrievalTimeout: (String verificationId) {},
-                    timeout: Duration(seconds: 60)
+                    timeout: const Duration(seconds: 60)
                   );
                 }),
-                SizedBox(
+                const SizedBox(
                   height: 30,
                 ),
-                resuableTextField("OTP",Icons.lock,false,_otpTextController),
-                SizedBox(
-                  height: 30,
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(25, 10, 0, 0),
+                  child: Container(
+                    alignment: Alignment.topLeft,
+
+                    child: const Text('Enter OTP',
+                      style: TextStyle(
+                        color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                      letterSpacing: 3.0),
+
+                    ),
+                  ),
                 ),
-                signInSignUpButton(context, false, () async {
+                Padding(
+                  padding: const EdgeInsets.all(30.0),
+                  child: PinCodeTextField(
+                    length: 6,
+                    obscureText: false,
+                    animationType: AnimationType.fade,
+                    pinTheme: PinTheme(
+                      shape: PinCodeFieldShape.box,
+                      borderRadius: BorderRadius.circular(10),
+                      fieldHeight: 50,
+                      fieldWidth: 40,
+                      inactiveColor: Colors.white60,
+                      inactiveFillColor: Colors.transparent,
+                      activeFillColor: Colors.white,
+                    ),
+                    animationDuration: const Duration(milliseconds: 300),
+                    backgroundColor: Colors.transparent,
+                    enableActiveFill: true,
+
+                    controller: _otpTextController,
+                    onCompleted: (v) {
+                      print("Completed");
+                    },
+                    onChanged: (value) {
+                      print(value);
+                    },
+                    beforeTextPaste: (text) {
+                      print("Allowing to paste $text");
+                      //if you return true then it will show the paste confirmation dialog. Otherwise if false, then nothing will happen.
+                      //but you can show anything you want here, like your pop up saying wrong paste format or etc
+                      return true;
+                    }, appContext: context,
+                  ),
+                ),
+
+
+                const SizedBox(
+                  height: 5,
+                ),
+                signInSignUpButton(context, true, () async {
                    FirebaseAuth auth = FirebaseAuth.instance;
                       try {
                         PhoneAuthCredential credential = PhoneAuthProvider
@@ -89,11 +140,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         // Sign the user in (or link) with the credential
                         await auth.signInWithCredential(credential);
                         setState(() {
-                          Navigator.push(context, MaterialPageRoute(builder: (context)=>HomeScreen()));
+                          Navigator.push(context, MaterialPageRoute(builder: (context)=>const HomeScreen()));
                         });
 
                       }catch(e){
-                        print("Wrong OTP");
+                        if (kDebugMode) {
+                          print("Wrong OTP");
+                        }
                         Fluttertoast.showToast(
                           msg: "Wrong OTP",
                           toastLength: Toast.LENGTH_LONG,
